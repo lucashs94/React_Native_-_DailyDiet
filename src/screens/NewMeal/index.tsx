@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { Platform, ScrollView, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker, { EvtTypes, Event, DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
 import { Input } from '../../components/Input'
 import { HeaderNew } from '../../components/HeaderNew'
@@ -12,10 +12,38 @@ import { BTNContainer, ButtonNew, Container, Content, DateTimeArea, Form } from 
 
 
 export function NewMeal() {
+  
 
   const { navigate } = useNavigation()
 
+  const [date, setDate] = useState(new Date())
+  const [time, setTime] = useState(new Date('HH:mm'))
+
+  const [dateInput, setDateInput] = useState('')
+  const [timeInput, setTimeInput] = useState('')
+
+  const [showPicker, setShowPicker] = useState(false)
+  const [mode, setMode] = useState('date')
+
   const [selection, setSelection] = useState<string | null>(null)
+
+
+  function onChange( event: DateTimePickerEvent, selectedDate: Date){
+
+    if(event.type === 'set'){
+      mode === 'date' 
+      ? (setDateInput(selectedDate.toLocaleDateString('pt-BR')))
+      : (setTimeInput(selectedDate.toLocaleTimeString('pt-BR').slice(0,5)))
+    }
+
+    setShowPicker(false)
+  }
+
+  function handleShowPicker(mode: string){
+    setShowPicker(true)
+    setMode(mode)
+  }
+
 
   function handleFeedback(){
 
@@ -54,19 +82,44 @@ export function NewMeal() {
             />
 
             <DateTimeArea>
-              <Input
-                label='Data'
-                numberOfLines={1}
-                multiline={false}
-                $flexRow
-              />
 
-              <Input
-                label='Hora'
-                numberOfLines={1}
-                multiline={false}
-                $flexRow
-              />
+              {
+                showPicker && (
+                  <DateTimePicker 
+                    mode={mode}
+                    display={mode === 'date' ? 'default' : 'spinner'}
+                    value={date}
+                    onChange={onChange}
+                    is24Hour={true}
+                  />
+                )
+              }
+
+              <Pressable 
+                style={{ flex: 1}}
+                onPress={() => handleShowPicker('date')}
+              >
+                <Input
+                  label='Data'
+                  value={dateInput}
+                  placeholder='01/01/2023'
+                  editable={false}
+                  $flexRow
+                />
+              </Pressable>
+
+              <Pressable
+                style={{ flex: 1}}
+                onPress={() => handleShowPicker('time')}
+              >
+                <Input
+                  label='Hora'
+                  value={timeInput}
+                  placeholder='20:00'
+                  editable={false}
+                  $flexRow
+                />
+              </Pressable>
             </DateTimeArea>
 
             <SelectArea 

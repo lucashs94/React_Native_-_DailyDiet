@@ -1,6 +1,7 @@
 import { TouchableOpacityProps } from 'react-native'
-import { Container, Icon, TextButton, icon, variant } from './styles'
-
+import { Container, TextButton, icon, variant } from './styles'
+import * as Icon from 'phosphor-react-native'
+import theme from '../../styles/theme'
 
 type Props = TouchableOpacityProps & {
   label: string
@@ -8,16 +9,25 @@ type Props = TouchableOpacityProps & {
   variant?: variant
 }
 
-
 export function Button({ label, icon = null, variant = 'default', ...rest }: Props) {
+
+  const color = variant === 'default' ? theme.COLORS.BASE.WHITE : theme.COLORS.BASE.GRAY_1
+
+
   return (
     <Container
+      activeOpacity={0.7}
       variant={variant}
       {...rest}
     >
 
       {
-        icon && <Icon variant={variant}/>
+        icon && ( 
+          icon === 'PencilSimpleLine' 
+          ? <Icon.PencilSimpleLine size={18} color={color}/> 
+          : icon === 'Plus' ? <Icon.Plus size={18} color={color}/> 
+          : <Icon.Trash size={18} color={color}/>
+        )
       }
 
       <TextButton

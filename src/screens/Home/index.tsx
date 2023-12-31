@@ -1,14 +1,17 @@
-import { SectionList, Text } from 'react-native'
+import { SectionList } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import { Button } from '../../components/Button'
 import { Header } from '../../components/Header'
 import { PercentCard } from '../../components/PercentCard'
 
-import { Container, Content, SectionTitle } from './styles'
 import { DATA } from '../../data'
 import { EmptyList } from '../../components/EmptyList'
 import { MealCard } from '../../components/MealCard'
 import { HeaderSectionText } from '../../components/HeaderSectionText'
-import { useNavigation } from '@react-navigation/native'
+
+import { Container, Content, SectionTitle } from './styles'
+import { useEffect } from 'react'
+import { getAllMeals, loadMeals } from '../../services/storage'
 
 
 export function Home() {
@@ -22,9 +25,27 @@ export function Home() {
     navigate('stats', { target: PERCENT_TARGET })
   }
 
+
   function handleNewMeal(){
     navigate('new')
   }
+
+
+  useEffect(() => {
+
+    async function getAll(){
+
+      const dataList = await getAllMeals()
+      console.log(dataList)
+
+      const loaded = await loadMeals()
+      console.log(loaded);
+      console.log(loaded[0].data);
+      
+    }
+    getAll()
+    
+  }, [])
 
 
   return (
@@ -45,7 +66,7 @@ export function Home() {
 
         <Button 
           label='Nova Refeição'
-          icon
+          icon= 'Plus'
           onPress={handleNewMeal}
         />
 

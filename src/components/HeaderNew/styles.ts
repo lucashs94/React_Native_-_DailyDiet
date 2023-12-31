@@ -4,6 +4,7 @@ import { ArrowLeft } from 'phosphor-react-native'
 
 type Props = {
   newHeight: number
+  bgColor: boolean | null
 }
 
 export const Container = styled.View<Props>`
@@ -16,7 +17,9 @@ export const Container = styled.View<Props>`
 
   padding: 0 24px;
 
-  background-color: ${({ theme }) => theme.COLORS.BASE.GRAY_5};
+  background-color: ${({ theme, bgColor }) => bgColor !== null 
+  ? (bgColor ? theme.COLORS.PRODUCT.GREEN_LIGHT : theme.COLORS.PRODUCT.RED_LIGHT) 
+  : theme.COLORS.BASE.GRAY_5};
 `
 
 export const ButtonIcon = styled.TouchableOpacity`

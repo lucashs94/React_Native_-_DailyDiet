@@ -1,36 +1,35 @@
 import { useState } from 'react';
 import { Platform, ScrollView, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import DateTimePicker, { EvtTypes, Event, DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
 import { Input } from '../../components/Input'
 import { HeaderNew } from '../../components/HeaderNew'
 import { SelectArea } from '../../components/SelectArea';
 
 import { BTNContainer, ButtonNew, Container, Content, DateTimeArea, Form } from './styles'
+import { createMeal } from '../../services/storage';
 
-
+type AndroidMode = 'date' | 'time'
 
 export function NewMeal() {
   
-
   const { navigate } = useNavigation()
 
-  const [date, setDate] = useState(new Date())
-  const [time, setTime] = useState(new Date('HH:mm'))
+  const [mealName, setMealName] = useState('')
+  const [mealDescription, setMealDescription] = useState('')
 
-  const [dateInput, setDateInput] = useState('')
-  const [timeInput, setTimeInput] = useState('')
-
+  const [dateInput, setDateInput] = useState<string>('')
+  const [timeInput, setTimeInput] = useState<string>('')
   const [showPicker, setShowPicker] = useState(false)
-  const [mode, setMode] = useState('date')
+  const [mode, setMode] = useState<AndroidMode>("date")
 
   const [selection, setSelection] = useState<string | null>(null)
 
 
-  function onChange( event: DateTimePickerEvent, selectedDate: Date){
+  function onChange( event: DateTimePickerEvent, selectedDate: Date | undefined){
 
-    if(event.type === 'set'){
+    if(event.type === 'set' && selectedDate){
       mode === 'date' 
       ? (setDateInput(selectedDate.toLocaleDateString('pt-BR')))
       : (setTimeInput(selectedDate.toLocaleTimeString('pt-BR').slice(0,5)))
@@ -39,23 +38,45 @@ export function NewMeal() {
     setShowPicker(false)
   }
 
-  function handleShowPicker(mode: string){
+  
+  function handleShowPicker(mode: AndroidMode){
     setShowPicker(true)
     setMode(mode)
   }
 
 
-  function handleFeedback(){
+  async function handleFeedback(){
+
+    if(
+      mealName === '' 
+      || mealDescription === ''
+      || selection === null 
+      || dateInput === ''
+      || timeInput === ''
+    ){
+      return
+    }
+
+    const data = {
+      name: mealName,
+      description: mealDescription,
+      date: dateInput,
+      time: timeInput,
+      status: selection === 'yes' ? true : false,
+    }
+
+    await createMeal(data)
 
     navigate('feedback', { selection })
-
   }
   
 
   return (
     <Container>
 
-      <HeaderNew />
+      <HeaderNew 
+        title='Nova refeição'
+      />
 
       <Content
         behavior={Platform.OS === 'ios' ? 'padding' : 'height' }
@@ -71,7 +92,8 @@ export function NewMeal() {
             <Input
               label='Nome'
               numberOfLines={1}
-              multiline={false}
+              onChangeText={setMealName}
+              value={mealName}
             />
 
             <Input
@@ -79,6 +101,8 @@ export function NewMeal() {
               numberOfLines={5}
               multiline={true}
               style={{ textAlignVertical: 'top',  maxHeight: 130 }}
+              onChangeText={setMealDescription}
+              value={mealDescription}
             />
 
             <DateTimeArea>
@@ -88,7 +112,7 @@ export function NewMeal() {
                   <DateTimePicker 
                     mode={mode}
                     display={mode === 'date' ? 'default' : 'spinner'}
-                    value={date}
+                    value={new Date()}
                     onChange={onChange}
                     is24Hour={true}
                   />
@@ -134,6 +158,7 @@ export function NewMeal() {
         <BTNContainer>
           <ButtonNew
             label='Cadastrar refeição'
+            activeOpacity={0.7}
             onPress={handleFeedback}
             disabled={!selection}
           />

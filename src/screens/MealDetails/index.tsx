@@ -1,88 +1,70 @@
-import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
-import { Input } from '../../components/Input'
 import { HeaderNew } from '../../components/HeaderNew'
-import { SelectArea } from '../../components/SelectArea';
 
-import { BTNContainer, ButtonNew, Container, Content, DateTimeArea, Form } from './styles'
+import { BTNContainer, ButtonNew, Container, Content, DataArea, DataInfo, DateInfoArea, DateTitle, MealDate, MealDesc, MealName, MealStatus, MealStatusText, Status,  } from './styles'
+import { IMealProps } from '../../services/storage';
+import React from 'react';
 
 
+type Props = IMealProps
 
 export function MealDetails() {
 
   const { navigate } = useNavigation()
+  const { params } = useRoute()
+  // const { meal } = params as Props
 
-  const [selection, setSelection] = useState<string | null>(null)
-
-  function handleFeedback(){
-
-    navigate('feedback', { selection })
-
-  }
-  
 
   return (
     <Container>
 
-      <HeaderNew />
+      <HeaderNew
+        title='Refeição'
+      />
 
-      <Content
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height' }
-        keyboardVerticalOffset={200}
-      >
+      <Content>
 
-        <ScrollView 
-          style={{ flex: 1, width: '100%',}}
-          showsVerticalScrollIndicator={false}
-        >
+        <DataArea>
 
-          <Form>
-            <Input
-              label='Nome'
-              numberOfLines={1}
-              multiline={false}
-            />
+          <DataInfo>
+            <MealName>
+              Sanduiche
+            </MealName>
+            <MealDesc>
+              Sanduíche de pão integral com atum e salada de alface e tomate
+            </MealDesc>
+          </DataInfo>
 
-            <Input
-              label='Descrição'
-              numberOfLines={5}
-              multiline={true}
-              style={{ textAlignVertical: 'top',  maxHeight: 130 }}
-            />
+          <DateInfoArea>
+            <DateTitle>
+              Data e Hora
+            </DateTitle>
+            <MealDate>
+              12/08/2023 ãs 20:00
+            </MealDate>
+          </DateInfoArea>
 
-            <DateTimeArea>
-              <Input
-                label='Data'
-                numberOfLines={1}
-                multiline={false}
-                $flexRow
-              />
+          <MealStatus>
+            <Status/>
+            <MealStatusText>
+              dentro da dieta
+            </MealStatusText>
+          </MealStatus>
 
-              <Input
-                label='Hora'
-                numberOfLines={1}
-                multiline={false}
-                $flexRow
-              />
-            </DateTimeArea>
+        </DataArea>
 
-            <SelectArea 
-              selection={selection}
-              onHandleSelection={setSelection}
-            /> 
-            
-          </Form>
-
-        </ScrollView>
         
         <BTNContainer>
           <ButtonNew
-            label='Cadastrar refeição'
-            onPress={handleFeedback}
-            disabled={!selection}
+            icon={'PencilSimpleLine'}
+            label='Editar refeição'
+          />
+          
+          <ButtonNew
+            icon={'Trash'}
+            variant='outline'
+            label='Excluir refeição'
           />
         </BTNContainer>
 

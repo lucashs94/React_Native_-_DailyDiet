@@ -1,3 +1,5 @@
+import { IMealProps } from "../services/storage"
+
 export declare global {
   namespace ReactNavigation {
     interface RootParamList {
@@ -8,7 +10,8 @@ export declare global {
       new: undefined,
       feedback: {
         selection: string | null
-      }
+      },
+      details: undefined
     }
   }
 }

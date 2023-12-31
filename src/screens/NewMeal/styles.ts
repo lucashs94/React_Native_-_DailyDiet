@@ -1,4 +1,4 @@
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 import { Button } from '../../components/Button'
 
 
@@ -37,6 +37,8 @@ export const BTNContainer = styled.View`
 `
 
 export const ButtonNew = styled(Button)`
-  
+  ${({ disabled }) => disabled && css`
+    opacity: 0.7;
+  `}
 `
 

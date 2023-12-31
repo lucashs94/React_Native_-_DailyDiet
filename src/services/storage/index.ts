@@ -1,10 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
-
+import uuid from 'react-native-uuid'
 const STORAGE_KEY = '@dailyDiet:meals'
 
 
-type IMealProps = {
+export type IMealProps = {
   id: string
   name: string
   description: string
@@ -12,6 +11,9 @@ type IMealProps = {
   time: string
   status: boolean
 }
+
+export type IMealPropsData = Omit<IMealProps, 'id'>
+
 
 type ISectionsProps = { [data:string]: IMealProps[] }
 
@@ -30,10 +32,16 @@ export const getMeal = () => {
 }
 
 
-export const insertMeal = async (data: IMealProps) => {
+export const createMeal = async (data: IMealPropsData) => {
   
   let meals: IMealProps[] = await getAllMeals()
-  meals.push(data)
+
+  const newData: IMealProps = {
+    id: String(uuid.v4()),
+    ...data
+  }
+
+  meals.push(newData)
 
 
   if(data){

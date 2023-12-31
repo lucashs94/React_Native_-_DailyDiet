@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native'
 import { Container, MealText, Separator, Status, TimeText } from './styles'
 
 type Props = {
@@ -8,10 +9,18 @@ type Props = {
   }
 }
 
-export function MealCard({ item: {time, name, status } }: Props) {
+export function MealCard({ item: { time, name, status } }: Props) {
+
+  const { navigate } = useNavigation()
+
+  function handleDetails(){
+    navigate('details')
+  }
+
   return (
     <Container
       activeOpacity={0.7}
+      onPress={handleDetails}
     >
 
       <TimeText>

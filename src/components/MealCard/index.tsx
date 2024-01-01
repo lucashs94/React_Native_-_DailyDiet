@@ -1,20 +1,21 @@
+import { useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native'
+
+import { IMealProps } from '../../services/storage'
+
 import { Container, MealText, Separator, Status, TimeText } from './styles'
 
+
 type Props = {
-  item: {
-    time: string
-    name: string
-    status: boolean
-  }
+  item: IMealProps
 }
 
-export function MealCard({ item: { time, name, status } }: Props) {
+export function MealCard({ item }: Props) {
 
   const { navigate } = useNavigation()
 
   function handleDetails(){
-    navigate('details')
+    navigate('details', { item })
   }
 
   return (
@@ -24,17 +25,17 @@ export function MealCard({ item: { time, name, status } }: Props) {
     >
 
       <TimeText>
-        {time}
+        {item.time}
       </TimeText>
 
       <Separator />
 
       <MealText>
-        {name}
+        {item.name}
       </MealText>
 
       <Status 
-        status={status}
+        status={item.status}
       />
 
     </Container>

@@ -2,6 +2,11 @@ import styled from 'styled-components/native'
 import { Button } from '../../components/Button'
 
 
+type StatusProps = {
+  status: boolean
+}
+
+
 export const Container = styled.View`
   flex: 1;
 `
@@ -71,8 +76,11 @@ export const MealStatus = styled.View`
   gap: 12px;
 `
 
-export const Status = styled.View`
-  background-color: ${({ theme }) => theme.COLORS.PRODUCT.GREEN_DARK};
+export const Status = styled.View<StatusProps>`
+  background-color: ${({ theme, status }) => status 
+    ? theme.COLORS.PRODUCT.GREEN_DARK
+    : theme.COLORS.PRODUCT.RED_DARK
+  };
   width: 8px;
   height: 8px;
   border-radius: 50px;

@@ -1,19 +1,35 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { HeaderNew } from '../../components/HeaderNew'
-
-import { BTNContainer, ButtonNew, Container, Content, DataArea, DataInfo, DateInfoArea, DateTitle, MealDate, MealDesc, MealName, MealStatus, MealStatusText, Status,  } from './styles'
 import { IMealProps } from '../../services/storage';
-import React from 'react';
+
+import { 
+  BTNContainer, 
+  ButtonNew, 
+  Container, 
+  Content, 
+  DataArea, 
+  DataInfo, 
+  DateInfoArea, 
+  DateTitle, 
+  MealDate, 
+  MealDesc, 
+  MealName, 
+  MealStatus, 
+  MealStatusText, 
+  Status,  
+} from './styles'
 
 
-type Props = IMealProps
+type Props = {
+  item: IMealProps
+}
 
 export function MealDetails() {
 
   const { navigate } = useNavigation()
   const { params } = useRoute()
-  // const { meal } = params as Props
+  const { item } = params as Props
 
 
   return (
@@ -21,6 +37,7 @@ export function MealDetails() {
 
       <HeaderNew
         title='Refeição'
+        bgColor={item.status}
       />
 
       <Content>
@@ -29,10 +46,10 @@ export function MealDetails() {
 
           <DataInfo>
             <MealName>
-              Sanduiche
+              {item.name}
             </MealName>
             <MealDesc>
-              Sanduíche de pão integral com atum e salada de alface e tomate
+              {item.description}
             </MealDesc>
           </DataInfo>
 
@@ -41,14 +58,17 @@ export function MealDetails() {
               Data e Hora
             </DateTitle>
             <MealDate>
-              12/08/2023 ãs 20:00
+              {item.date} ãs {item.time}
             </MealDate>
           </DateInfoArea>
 
           <MealStatus>
-            <Status/>
+            <Status 
+              status={item.status}
+            />
+
             <MealStatusText>
-              dentro da dieta
+              { item.status ? 'dentro da dieta' : 'fora da dieta'}
             </MealStatusText>
           </MealStatus>
 
@@ -59,12 +79,14 @@ export function MealDetails() {
           <ButtonNew
             icon={'PencilSimpleLine'}
             label='Editar refeição'
+            onPress={ () => {} }
           />
           
           <ButtonNew
             icon={'Trash'}
             variant='outline'
             label='Excluir refeição'
+            onPress={ () => {} }
           />
         </BTNContainer>
 

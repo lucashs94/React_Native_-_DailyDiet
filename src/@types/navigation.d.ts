@@ -11,7 +11,9 @@ export declare global {
       feedback: {
         selection: string | null
       },
-      details: undefined
+      details: {
+        item: IMealProps
+      }
     }
   }
 }

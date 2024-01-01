@@ -1,24 +1,32 @@
+import { useEffect, useState } from 'react'
 import { SectionList } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
+
 import { Button } from '../../components/Button'
 import { Header } from '../../components/Header'
 import { PercentCard } from '../../components/PercentCard'
-
-import { DATA } from '../../data'
 import { EmptyList } from '../../components/EmptyList'
 import { MealCard } from '../../components/MealCard'
 import { HeaderSectionText } from '../../components/HeaderSectionText'
 
-import { Container, Content, SectionTitle } from './styles'
-import { useEffect } from 'react'
-import { getAllMeals, loadMeals } from '../../services/storage'
+import { IMealProps, loadMeals } from '../../services/storage'
 
+import { Container, Content, SectionTitle } from './styles'
+
+
+type ISectionListDataProps = {
+  title: string
+  data: IMealProps[]
+}
 
 export function Home() {
+
+  const [dataList, setDataList] = useState<ISectionListDataProps[]>([])
 
   const PERCENT_TARGET = 90
 
   const { navigate } = useNavigation()
+  const isFocused = useIsFocused()
 
 
   function handleGoToDetails(){
@@ -35,17 +43,13 @@ export function Home() {
 
     async function getAll(){
 
-      const dataList = await getAllMeals()
-      console.log(dataList)
-
-      const loaded = await loadMeals()
-      console.log(loaded);
-      console.log(loaded[0].data);
+      const returnData = await loadMeals()
+      setDataList(returnData)
       
     }
     getAll()
     
-  }, [])
+  }, [isFocused])
 
 
   return (
@@ -71,8 +75,8 @@ export function Home() {
         />
 
         <SectionList
-          style={{ width: '100%', marginTop: 15 }}
-          sections={DATA}
+          style={{ width: '100%', marginTop: 20, marginBottom: 20 }}
+          sections={dataList}
           keyExtractor={ item => String(item.id) }
           renderItem={ ({ item }) => (
             <MealCard item={item} />

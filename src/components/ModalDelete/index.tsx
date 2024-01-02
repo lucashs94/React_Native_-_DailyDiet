@@ -1,12 +1,25 @@
 import { ModalProps } from 'react-native'
-import { BgBlack, ButtonArea, ButtonCancel, ButtonDelete, Container, Content, ModalView, TextDelete } from './styles'
+
+import { 
+  BgBlack, 
+  ButtonArea, 
+  ButtonCancel, 
+  ButtonDelete, 
+  Container, 
+  Content, 
+  ModalView, 
+  TextCancelButton, 
+  TextDeleteButton, 
+  TextModal 
+} from './styles'
 
 
 type Props = ModalProps & {
   visible: boolean
+  onClose: () => void
 }
 
-export function ModalDelete( { visible, ...rest}: Props ) {
+export function ModalDelete( { visible, onClose, ...rest }: Props ) {
   return (
     <ModalView
       animationType='fade'
@@ -20,17 +33,23 @@ export function ModalDelete( { visible, ...rest}: Props ) {
         <BgBlack />
         
         <Content>
-          <TextDelete>
+          <TextModal>
             Deseja realmente excluir o registro da refeição?
-          </TextDelete>
+          </TextModal>
 
           <ButtonArea>
-            <ButtonCancel>
-
+            <ButtonCancel
+              activeOpacity={0.7}
+              onPress={ onClose }
+            >
+              <TextCancelButton>Cancelar</TextCancelButton>
             </ButtonCancel>
 
-            <ButtonDelete>
-              
+            <ButtonDelete
+              activeOpacity={0.7}
+              onPress={ () => {} }
+            >
+              <TextDeleteButton>Sim, excluir</TextDeleteButton>
             </ButtonDelete>
 
           </ButtonArea>

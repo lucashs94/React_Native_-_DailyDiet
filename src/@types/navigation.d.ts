@@ -7,7 +7,9 @@ export declare global {
       stats: {
         target: number
       }
-      new: undefined,
+      new: {
+        item: IMealProps | undefined
+      },
       feedback: {
         selection: string | null
       },

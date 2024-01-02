@@ -1,8 +1,10 @@
 import { useState } from 'react'
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native'
+
+import { IMealProps, deleteMeal } from '../../services/storage'
 
 import { HeaderNew } from '../../components/HeaderNew'
-import { IMealProps } from '../../services/storage';
+import { ModalDelete } from '../../components/ModalDelete'
 
 import { 
   BTNContainer, 
@@ -20,7 +22,6 @@ import {
   MealStatusText, 
   Status,  
 } from './styles'
-import { ModalDelete } from '../../components/ModalDelete';
 
 
 type Props = {
@@ -33,6 +34,18 @@ export function MealDetails() {
   const { navigate } = useNavigation()
   const { params } = useRoute()
   const { item } = params as Props
+
+
+  function handleEditMeal(){
+    navigate('new', { item: {...item} } )
+  }
+
+
+  async function handleDeleteMeal(){
+    await deleteMeal(item)
+
+    navigate( 'home' )
+  }
 
 
   return (
@@ -82,14 +95,14 @@ export function MealDetails() {
           <ButtonNew
             icon={'PencilSimpleLine'}
             label='Editar refeição'
-            onPress={ () => {} }
+            onPress={ handleEditMeal }
           />
           
           <ButtonNew
             icon={'Trash'}
             variant='outline'
             label='Excluir refeição'
-            onPress={ () => setModalVisible(true) }
+            onPress={ handleDeleteMeal }
           />
         </BTNContainer>
 
@@ -97,6 +110,7 @@ export function MealDetails() {
 
       <ModalDelete 
         visible={modalVisible}
+        onClose={ () => setModalVisible(false) }
       />
 
     </Container>

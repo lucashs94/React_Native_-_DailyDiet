@@ -26,7 +26,7 @@ export const ContentTitle = styled.Text`
 
   color: ${({ theme }) => theme.COLORS.BASE.GRAY_1};
   font-family: ${({ theme }) => theme.FONT_FAMILY.BOLD};
-  font-size: ${({ theme }) => theme.FONT_SIZE.SM}px;
+  font-size: ${({ theme }) => theme.FONT_SIZE.MD}px;
 `
 
 export const CardArea = styled.View`

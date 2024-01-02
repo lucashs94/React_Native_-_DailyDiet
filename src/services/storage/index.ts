@@ -51,9 +51,15 @@ export const createMeal = async (data: IMealPropsData) => {
 }
 
 
-export const deleteMeal = () => {
+export const deleteMeal = async (item: IMealProps) => {
 
+  const meals: IMealProps[] = await getAllMeals()
 
+  const filtered = meals.filter( meal => meal.id !== item.id)
+
+  if(filtered){
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(filtered))
+  }
 }
 
 

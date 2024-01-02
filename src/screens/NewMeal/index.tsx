@@ -1,20 +1,30 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Platform, ScrollView, Pressable } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+
+import { IMealProps, createMeal } from '../../services/storage';
 
 import { Input } from '../../components/Input'
 import { HeaderNew } from '../../components/HeaderNew'
 import { SelectArea } from '../../components/SelectArea';
 
 import { BTNContainer, ButtonNew, Container, Content, DateTimeArea, Form } from './styles'
-import { createMeal } from '../../services/storage';
+
 
 type AndroidMode = 'date' | 'time'
 
+type Props = {
+  item: IMealProps
+}
+
+
 export function NewMeal() {
   
+  const isFocused = useIsFocused()
   const { navigate } = useNavigation()
+  const { params } = useRoute()
+  const { item } = params as Props
 
   const [mealName, setMealName] = useState('')
   const [mealDescription, setMealDescription] = useState('')
@@ -69,13 +79,26 @@ export function NewMeal() {
 
     navigate('feedback', { selection })
   }
+
+
+  useEffect(() => {
+
+    if(item){
+      setMealName(item.name)
+      setMealDescription(item.description)
+      setDateInput(item.date)
+      setTimeInput(item.time)
+      setSelection( item.status ? 'yes' : 'no')
+    }
+
+  }, [isFocused])
   
 
   return (
     <Container>
 
       <HeaderNew 
-        title='Nova refeição'
+        title={ item ? 'Editar refeição' : 'Nova refeição'}
       />
 
       <Content
@@ -157,7 +180,7 @@ export function NewMeal() {
         
         <BTNContainer>
           <ButtonNew
-            label='Cadastrar refeição'
+            label={ item ? 'Salvar alterações' : 'Cadastrar refeição'}
             activeOpacity={0.7}
             onPress={handleFeedback}
             disabled={!selection}

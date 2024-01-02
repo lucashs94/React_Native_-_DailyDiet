@@ -35,7 +35,7 @@ export function Home() {
 
 
   function handleNewMeal(){
-    navigate('new')
+    navigate('new', { item: undefined })
   }
 
 

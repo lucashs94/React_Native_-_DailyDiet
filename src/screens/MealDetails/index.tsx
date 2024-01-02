@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { HeaderNew } from '../../components/HeaderNew'
@@ -19,6 +20,7 @@ import {
   MealStatusText, 
   Status,  
 } from './styles'
+import { ModalDelete } from '../../components/ModalDelete';
 
 
 type Props = {
@@ -26,6 +28,7 @@ type Props = {
 }
 
 export function MealDetails() {
+  const [modalVisible, setModalVisible] = useState(false)
 
   const { navigate } = useNavigation()
   const { params } = useRoute()
@@ -86,11 +89,15 @@ export function MealDetails() {
             icon={'Trash'}
             variant='outline'
             label='Excluir refeição'
-            onPress={ () => {} }
+            onPress={ () => setModalVisible(true) }
           />
         </BTNContainer>
 
       </Content>
+
+      <ModalDelete 
+        visible={modalVisible}
+      />
 
     </Container>
   )

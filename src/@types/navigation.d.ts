@@ -1,3 +1,4 @@
+import { IStatsDataProps } from "../screens/Home"
 import { IMealProps } from "../services/storage"
 
 export declare global {
@@ -5,7 +6,7 @@ export declare global {
     interface RootParamList {
       home: undefined
       stats: {
-        target: number
+        stats: IStatsDataProps | null
       }
       new: {
         item: IMealProps | undefined

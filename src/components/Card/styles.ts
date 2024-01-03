@@ -21,6 +21,8 @@ export const Container = styled.View<Props>`
   margin: 6px 0;
 
   border-radius: 8px;
+
+  elevation: 3;
 `
 
 export const Title = styled.Text`

@@ -20,6 +20,7 @@ export const Container = styled.TouchableOpacity`
   padding: 14px 16px;
   margin-bottom: 10px;
   gap: 12px;
+
 `
 
 export const TimeText = styled.Text`

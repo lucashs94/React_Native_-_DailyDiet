@@ -1,23 +1,29 @@
 import { TouchableOpacityProps } from 'react-native'
+
 import { Container, Icon, SubTitle, Title } from './styles'
 
 
 type Props = TouchableOpacityProps & {
   target: number
+  current?: number
 }
 
-export function PercentCard({ target, ...rest }: Props) {
+export function PercentCard({ target, current, ...rest }: Props) {
   return (
     <Container
       activeOpacity={0.7}
       target={target}
+      current={current ? current : 0}
       {...rest}
     >
 
-      <Icon /> 
+      <Icon 
+        target={target}
+        current={current ? current : 0}
+      /> 
 
       <Title>
-        90,86%
+        { current ? current.toFixed(2) : '00,00'}%
       </Title>
 
       <SubTitle>

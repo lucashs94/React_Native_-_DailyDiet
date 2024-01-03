@@ -3,7 +3,7 @@ import { Platform, ScrollView, Pressable } from 'react-native';
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
-import { IMealProps, createMeal } from '../../services/storage';
+import { IMealProps, createMeal, deleteMeal } from '../../services/storage';
 
 import { Input } from '../../components/Input'
 import { HeaderNew } from '../../components/HeaderNew'
@@ -55,7 +55,7 @@ export function NewMeal() {
   }
 
 
-  async function handleFeedback(){
+  async function handleCreateMeal(){
 
     if(
       mealName === '' 
@@ -65,6 +65,10 @@ export function NewMeal() {
       || timeInput === ''
     ){
       return
+    }
+
+    if(item){
+      await deleteMeal(item)
     }
 
     const data = {
@@ -82,7 +86,6 @@ export function NewMeal() {
 
 
   useEffect(() => {
-
     if(item){
       setMealName(item.name)
       setMealDescription(item.description)
@@ -182,7 +185,7 @@ export function NewMeal() {
           <ButtonNew
             label={ item ? 'Salvar alterações' : 'Cadastrar refeição'}
             activeOpacity={0.7}
-            onPress={handleFeedback}
+            onPress={handleCreateMeal}
             disabled={!selection}
           />
         </BTNContainer>

@@ -1,6 +1,8 @@
 import { Dimensions } from 'react-native'
+import { useRoute } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
+import { IStatsDataProps, PERCENT_TARGET } from '../Home';
 import { Card } from '../../components/Card';
 import { HeaderDetails } from '../../components/HeaderDetails'
 
@@ -10,30 +12,30 @@ import {
   Content, 
   ContentTitle, 
 } from './styles'
-import { useRoute } from '@react-navigation/native';
 
 
 const { height } = Dimensions.get('window')
 
 type Props = {
-  target: number
+  stats: IStatsDataProps | null
 }
-
 
 export function StatsDetails() {
   
   const HEIGHT = useSafeAreaInsets().top + height/4
 
   const { params } = useRoute()
-  const { target } = params as Props
+  const { stats } = params as Props
 
+  
   
   return (
     <Container>
 
       <HeaderDetails
         newHeight={HEIGHT}
-        target={target}
+        target={PERCENT_TARGET}
+        current={stats?.healthyPercent}
       />
 
       <Content>
@@ -43,24 +45,24 @@ export function StatsDetails() {
         </ContentTitle>
 
         <Card 
-          title='22'
+          title={stats ? stats.bestSequenceQTT.toString() : '0'}
           subtitle='melhor sequência de pratos dentro da dieta'
         />
 
         <Card 
-          title='109'
+          title={stats ? stats.totalMeals.toString() : '0'}
           subtitle='refeições registradas'
         />
 
         <CardArea>
           <Card 
-            title='99'
+            title={stats ? stats.healthyQTT.toString() : '0'}
             subtitle='refeições dentro da dieta'
             type='PRIMARY'
           />
 
           <Card 
-            title='10'
+            title={stats ? stats.notHealthyQTT.toString() : '0'}
             subtitle='refeições fora da dieta'
             type='SECONDARY'
           />

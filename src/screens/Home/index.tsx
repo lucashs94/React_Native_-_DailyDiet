@@ -9,7 +9,7 @@ import { EmptyList } from '../../components/EmptyList'
 import { MealCard } from '../../components/MealCard'
 import { HeaderSectionText } from '../../components/HeaderSectionText'
 
-import { IMealProps, loadMeals } from '../../services/storage'
+import { IMealProps, loadMeals, statsMeals } from '../../services/storage'
 
 import { Container, Content, SectionTitle } from './styles'
 
@@ -19,18 +19,29 @@ type ISectionListDataProps = {
   data: IMealProps[]
 }
 
+export type IStatsDataProps = {
+  totalMeals: number
+  healthyQTT: number
+  notHealthyQTT: number
+  healthyPercent: number
+  bestSequenceQTT: number
+}
+
+export const PERCENT_TARGET = 80
+
 export function Home() {
 
   const [dataList, setDataList] = useState<ISectionListDataProps[]>([])
+  const [stats, setStats] = useState<IStatsDataProps | null>(null)
 
-  const PERCENT_TARGET = 90
 
   const { navigate } = useNavigation()
   const isFocused = useIsFocused()
 
 
   function handleGoToDetails(){
-    navigate('stats', { target: PERCENT_TARGET })
+
+    navigate('stats', { stats })
   }
 
 
@@ -39,15 +50,23 @@ export function Home() {
   }
 
 
+  async function fetchAll(){
+
+    const returnData = await loadMeals()
+    setDataList(returnData)
+  }
+
+
+  async function fetchStats(){
+    const stats = await statsMeals()
+    setStats(stats)
+  }
+
+
   useEffect(() => {
 
-    async function getAll(){
-
-      const returnData = await loadMeals()
-      setDataList(returnData)
-      
-    }
-    getAll()
+    fetchAll()
+    fetchStats()
     
   }, [isFocused])
 
@@ -59,6 +78,7 @@ export function Home() {
 
       <PercentCard 
         target={PERCENT_TARGET}
+        current={stats?.healthyPercent}
         onPress={handleGoToDetails}
       />
 

@@ -1,16 +1,17 @@
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
+
 import { ButtonIcon, Container, HeaderSubTitle, HeaderTitle, Icon } from './styles'
 
 
 type Props = {
   newHeight: number
   target: number
+  current?: number
 }
 
-export function HeaderDetails({ newHeight, target }: Props) {
+export function HeaderDetails({ newHeight, target, current }: Props) {
 
   const { goBack } = useNavigation()
-
 
   function handleGoBack(){
     goBack()
@@ -21,15 +22,19 @@ export function HeaderDetails({ newHeight, target }: Props) {
     <Container
       newHeight={newHeight}
       target={target}
+      current={current ? current: 0}
     >
         <ButtonIcon
           onPress={handleGoBack}
         >
-          <Icon />
+          <Icon 
+            target={target}
+            current={current ? current: 0}
+          />
         </ButtonIcon>
 
         <HeaderTitle>
-          90,85%
+          {current}%
         </HeaderTitle>
 
         <HeaderSubTitle>

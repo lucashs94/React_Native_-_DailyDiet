@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import uuid from 'react-native-uuid'
+
 const STORAGE_KEY = '@dailyDiet:meals'
 
 
@@ -24,11 +25,6 @@ export const getAllMeals = async () => {
   const resultParsed = result ? JSON.parse(result) : []
 
   return resultParsed
-}
-
-
-export const getMeal = () => {
-
 }
 
 
@@ -67,7 +63,9 @@ export const loadMeals = async () => {
   let sections: ISectionsProps = {}
   let meals: IMealProps[] = await getAllMeals() 
 
-  meals.sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`))
+  meals.sort((a, b) => {
+    return convertToDate(a) - convertToDate(b)
+  })
 
   meals.forEach( meal => {
 
@@ -89,3 +87,59 @@ export const loadMeals = async () => {
 }
 
 
+export const statsMeals = async () => {
+  
+  const meals: IMealProps[] = await getAllMeals()
+
+  const totalMeals = meals.length
+  const healthyQTT = meals.filter( meal => meal.status === true ).length
+  const notHealthyQTT = meals.filter( meal => meal.status === false ).length
+  const healthyPercent = Number((healthyQTT/totalMeals * 100).toFixed(2))
+  const bestSequenceQTT = bestSequence(meals)
+
+  const stats = {
+    totalMeals,
+    healthyQTT,
+    notHealthyQTT,
+    healthyPercent,
+    bestSequenceQTT,
+  }
+
+  return stats
+}
+
+
+function bestSequence(array: IMealProps[]){
+
+  array.sort((a, b) => convertToDate(a) - convertToDate(b))
+
+  let sequenceHealthy = 0
+  let masxSequenceHealthy = 0
+
+  for (const obj of array){
+    if (obj.status === true){
+      sequenceHealthy++
+
+      sequenceHealthy > masxSequenceHealthy && (masxSequenceHealthy = sequenceHealthy)
+
+    }else{
+      sequenceHealthy = 0
+    }
+  }
+
+  return masxSequenceHealthy
+}
+
+
+function convertToDate(obj: IMealProps){
+
+  const objTimestamp = new Date(
+    Number(obj.date.split('/')[2]), 
+    Number(obj.date.split('/')[1]) - 1, 
+    Number(obj.date.split('/')[0]),
+    Number(obj.time.split(':')[0]),
+    Number(obj.time.split(':')[1]),
+  )
+
+  return objTimestamp.getTime()
+}

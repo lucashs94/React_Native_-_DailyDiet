@@ -104,6 +104,7 @@ O layout da aplicação está disponível no Figma:
 **TELA DELETE**
   - [x] Tela de Exclusão, contendo:
     - [x] Modal de confirmação da exclusão da refeição
+<br>
 
 **TELA REGISTER**
   - [x] Tela de registro de refeição, contendo:
